@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator Soal Persamaan Kuadrat</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 650px;
+            margin: 30px auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .card {
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 15px;
+            margin: 5px 3px;
+            cursor: pointer;
+        }
+
+        .soal {
+            font-size: 22px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .jawaban {
+            background: #f2f2f2;
+            padding: 12px;
+            margin-top: 15px;
+            border-radius: 6px;
+            overflow-wrap: anywhere;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Generator Soal Persamaan Kuadrat</h1>
+
+    <!-- TIPE 1 -->
+    <div class="card">
+        <h2>Tipe 1: Tanpa Koefisien x²</h2>
+        <p>Bentuk umum: x² + bx + c = 0</p>
+
+        <div id="soal1" class="soal">
+            Klik tombol untuk membuat soal.
+        </div>
+
+        <button onclick="buatSoal1()">Soal Baru</button>
+        <button onclick="jawaban1()">Lihat Jawaban</button>
+
+        <div id="jawaban1" class="jawaban" hidden></div>
+    </div>
+
+    <!-- TIPE 2 -->
+    <div class="card">
+        <h2>Tipe 2: Dengan Koefisien x²</h2>
+        <p>Bentuk umum: ax² + bx + c = 0</p>
+
+        <div id="soal2" class="soal">
+            Klik tombol untuk membuat soal.
+        </div>
+
+        <button onclick="buatSoal2()">Soal Baru</button>
+        <button onclick="jawaban2()">Lihat Jawaban</button>
+
+        <div id="jawaban2" class="jawaban" hidden></div>
+    </div>
+
+    <!-- TIPE 3 -->
+    <div class="card">
+        <h2>Tipe 3: Rumus ABC</h2>
+        <p>Bentuk umum: ax² + bx + c = 0</p>
+
+        <p>
+            Rumus:
+            x = (-b ± √(b² - 4ac)) / 2a
+        </p>
+
+        <div id="soal3" class="soal">
+            Klik tombol untuk membuat soal.
+        </div>
+
+        <button onclick="buatSoal3()">Soal Baru</button>
+        <button onclick="jawaban3()">Lihat Jawaban</button>
+
+        <div id="jawaban3" class="jawaban" hidden></div>
+    </div>
+
+    <script>
+        // ==================================
+        // FUNGSI UMUM
+        // ==================================
+
+        // Membuat bilangan bulat acak
+        function acak(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        // Format suku dengan tanda yang sesuai
+        function formatSuku(nilai, variabel) {
+            if (nilai === 0) return "";
+
+            const tanda = nilai > 0 ? " + " : " - ";
+            const angka = Math.abs(nilai);
+
+            if (variabel === "x" && angka === 1) {
+                return tanda + "x";
+            }
+
+            return tanda + angka + variabel;
+        }
+
+        // Format persamaan kuadrat
+        function formatPersamaan(a, b, c) {
+            let sukuA;
+
+            if (a === 1) {
+                sukuA = "x²";
+            } else if (a === -1) {
+                sukuA = "-x²";
+            } else {
+                sukuA = a + "x²";
+            }
+
+            return sukuA
+                + formatSuku(b, "x")
+                + formatSuku(c, "")
+                + " = 0";
+        }
+
+        // Format angka desimal
+        function formatDesimal(angka) {
+            return Number(angka.toFixed(2)).toString();
+        }
+
+        // Menyimpan data soal
+        let data1 = {};
+        let data2 = {};
+        let data3 = {};
+
+
+        // ==================================
+        // TIPE 1: x² + bx + c = 0
+        // ==================================
+
+        function buatSoal1() {
+            let p = acak(-10, 10);
+            let q = acak(-10, 10);
+
+            // Hindari akar nol dan akar kembar
+            while (p === 0 || q === 0 || p === q) {
+                p = acak(-10, 10);
+                q = acak(-10, 10);
+            }
+
+            const a = 1;
+            const b = p + q;
+            const c = p * q;
+
+            data1 = { a, b, c, p, q };
+
+            document.getElementById("soal1").textContent =
+                formatPersamaan(a, b, c);
+
+            document.getElementById("jawaban1").hidden = true;
+        }
+
+        function jawaban1() {
+            if (!("p" in data1)) {
+                alert("Buat soal terlebih dahulu!");
+                return;
+            }
+
+            const { a, b, c, p, q } = data1;
+
+            const faktor1 = p > 0
+                ? `(x + ${p})`
+                : `(x - ${Math.abs(p)})`;
+
+            const faktor2 = q > 0
+                ? `(x + ${q})`
+                : `(x - ${Math.abs(q)})`;
+
+            const x1 = -p;
+            const x2 = -q;
+
+            const hasil =
+                `<strong>Pembahasan:</strong><br>` +
+                `Persamaan: ${formatPersamaan(a, b, c)}<br><br>` +
+
+                `Diketahui:<br>` +
+                `a = ${a}, b = ${b}, c = ${c}<br><br>` +
+
+                `Pemfaktoran:<br>` +
+                `${faktor1}${faktor2} = 0<br><br>` +
+
+                `${faktor1} = 0 atau ${faktor2} = 0<br><br>` +
+
+                `x + (${p}) = 0 atau x + (${q}) = 0<br><br>` +
+
+                `<strong>Jadi, x₁ = ${x1} dan x₂ = ${x2}</strong>`;
+
+            const elemen = document.getElementById("jawaban1");
+
+            elemen.innerHTML = hasil;
+            elemen.hidden = false;
+        }
+
+
+        // ==================================
+        // TIPE 2: ax² + bx + c = 0
+        // Metode pemfaktoran
+        // Langkah penyelesaian lebih rinci
+        // ==================================
+
+        function buatSoal2() {
+            // Bentuk: (mx + p)(nx + q) = 0
+            let m = acak(1, 5);
+            let n = acak(1, 5);
+            let p = acak(-9, 9);
+            let q = acak(-9, 9);
+
+            // Hindari konstanta nol dan akar kembar
+            while (
+                p === 0 ||
+                q === 0 ||
+                m * q === n * p
+            ) {
+                m = acak(1, 5);
+                n = acak(1, 5);
+                p = acak(-9, 9);
+                q = acak(-9, 9);
+            }
+
+            const a = m * n;
+            const b = m * q + n * p;
+            const c = p * q;
+
+            data2 = { a, b, c, m, n, p, q };
+
+            document.getElementById("soal2").textContent =
+                formatPersamaan(a, b, c);
+
+            document.getElementById("jawaban2").hidden = true;
+        }
+function buatSoal2() {
+    let a, b, c, m, n, p, q;
+
+    // Membuat soal dengan bentuk:
+    // (mx + p)(nx + q) = 0
+    // Koefisien a dibuat lebih dari 1.
+
+    do {
+        m = acak(2, 5);
+        n = acak(1, 5);
+
+        p = acak(-9, 9);
+        q = acak(-9, 9);
+
+        a = m * n;
+        b = m * q + n * p;
+        c = p * q;
+
+    } while (
+        p === 0 ||
+        q === 0 ||
+        b === 0 ||
+        c === 0 ||
+        m * q === n * p
+    );
+
+    data2 = { a, b, c, m, n, p, q };
+
+    document.getElementById("soal2").textContent =
+        formatPersamaan(a, b, c);
+
+    document.getElementById("jawaban2").hidden = true;
+}
+
+  function jawaban2() {
+    if (!("a" in data2)) {
+        alert("Buat soal terlebih dahulu!");
+        return;
+    }
+
+    const { a, b, c, m, n, p, q } = data2;
+
+    // Menghitung hasil kali a dan c
+    const ac = a * c;
+
+    // Dua bilangan untuk memecah suku tengah
+    const bil1 = m * q;
+    const bil2 = n * p;
+
+    // Fungsi format bilangan bertanda
+    function formatBilangan(nilai) {
+        return nilai < 0
+            ? `(${nilai})`
+            : `${nilai}`;
+    }
+
+    // Format suku aljabar dengan tanda positif/negatif
+    function formatSuku(nilai, variabel = "") {
+        if (nilai === 0) return "";
+
+        const tanda = nilai > 0 ? "+" : "-";
+        const angka = Math.abs(nilai);
+
+        let suku;
+
+        if (variabel === "x" && angka === 1) {
+            suku = "x";
+        } else {
+            suku = angka + variabel;
+        }
+
+        return ` ${tanda} ${suku}`;
+    }
+
+    // Format bentuk ax agar angka 1 tidak ditampilkan
+    function formatKoefX(koef) {
+        if (koef === 1) return "x";
+        if (koef === -1) return "-x";
+        return `${koef}x`;
+    }
+
+    // Format faktor linear
+    function faktor(koef, konstanta) {
+        let isi = formatKoefX(koef);
+
+        if (konstanta > 0) {
+            isi += ` + ${konstanta}`;
+        } else if (konstanta < 0) {
+            isi += ` - ${Math.abs(konstanta)}`;
+        }
+
+        return `(${isi})`;
+    }
+
+    // Membentuk dua faktor
+    const faktor1 = faktor(m, p);
+    const faktor2 = faktor(n, q);
+
+    // Menentukan dua suku hasil pemecahan suku tengah
+    const suku1 = bil1;
+    const suku2 = bil2;
+
+    // Menghitung akar
+    const x1 = -p / m;
+    const x2 = -q / n;
+
+    // Menentukan bentuk pengelompokan suku
+    const kelompok1 =
+        `${a}x²${formatSuku(suku1, "x")}`;
+
+    const kelompok2 =
+        `${formatSuku(suku2, "x")}${formatSuku(c)}`;
+
+    // Faktor persekutuan dari kelompok pertama dan kedua
+    const faktorKelompok1 =
+        `${m}x(${formatKoefX(n)}${formatSuku(q)})`;
+
+    const faktorKelompok2 =
+        `${p}(${formatKoefX(n)}${formatSuku(q)})`;
+
+    // Menampilkan hasil penyelesaian
+    const hasil =
+
+        `<strong>Pembahasan: Metode Pemfaktoran dengan Memecah Suku Tengah</strong><br><br>` +
+
+        `<strong>Soal:</strong><br>` +
+        `${formatPersamaan(a, b, c)}<br><br>` +
+
+        `<strong>Langkah 1: Kalikan koefisien a × c</strong><br>` +
+        `Diketahui:<br>` +
+        `a = ${a}, b = ${b}, dan c = ${c}<br><br>` +
+
+        `Hitung hasil perkalian a × c:<br>` +
+        `${a} × ${c} = ${ac}<br><br>` +
+
+        `Selanjutnya, cari dua bilangan yang:<br>` +
+        `• Jika dikalikan hasilnya ${ac}.<br>` +
+        `• Jika dijumlahkan hasilnya ${b}.<br><br>` +
+
+        `Dua bilangan yang memenuhi adalah ` +
+        `<strong>${bil1} dan ${bil2}</strong>, karena:<br>` +
+
+        `${formatBilangan(bil1)} × ${formatBilangan(bil2)} = ${ac}<br>` +
+        `${bil1} + (${bil2}) = ${b}<br><br>` +
+
+        `<strong>Langkah 2: Pecah suku tengah</strong><br>` +
+        `Suku tengah ${b}x dipecah menjadi ${bil1}x dan ${bil2}x.<br><br>` +
+
+        `${a}x²${formatSuku(suku1, "x")}` +
+        `${formatSuku(suku2, "x")}` +
+        `${formatSuku(c)} = 0<br><br>` +
+
+        `<strong>Langkah 3: Kelompokkan suku-sukunya</strong><br>` +
+
+        `Kelompokkan dua suku pertama dan dua suku terakhir:<br><br>` +
+
+        `(${a}x²${formatSuku(suku1, "x")})` +
+        ` + (${bil2}x${formatSuku(c)}) = 0<br><br>` +
+
+        `Faktorkan faktor persekutuan dari setiap kelompok:<br><br>` +
+
+        `${m}x(${formatKoefX(n)}${formatSuku(q)})` +
+        ` + ${p}(${formatKoefX(n)}${formatSuku(q)}) = 0<br><br>` +
+
+        `<strong>Langkah 4: Faktorkan</strong><br>` +
+
+        `Kedua kelompok memiliki faktor yang sama, yaitu ` +
+        `${faktor2}.<br><br>` +
+
+        `Keluarkan faktor yang sama tersebut:<br><br>` +
+
+        `${faktor1}${faktor2} = 0<br><br>` +
+
+        `Jadi, bentuk faktornya adalah:<br>` +
+        `<strong>${faktor1}${faktor2} = 0</strong><br><br>` +
+
+        `<strong>Langkah 5: Cari nilai x dari faktor pertama</strong><br>` +
+
+        `Samakan faktor pertama dengan nol:<br><br>` +
+
+        `${faktor1} = 0<br>` +
+
+        `${formatKoefX(m)} = ${p > 0 ? `-${p}` : Math.abs(p)}<br><br>` +
+
+        `Bagi kedua ruas dengan ${m}:<br>` +
+
+        `x = ${p > 0 ? `-${p}` : Math.abs(p)} / ${m}<br>` +
+
+        `x = ${formatDesimal(x1)}<br><br>` +
+
+        `<strong>Langkah 6: Cari nilai x dari faktor kedua</strong><br>` +
+
+        `Samakan faktor kedua dengan nol:<br><br>` +
+
+        `${faktor2} = 0<br>` +
+
+        `${formatKoefX(n)} = ${q > 0 ? `-${q}` : Math.abs(q)}<br><br>` +
+
+        `Bagi kedua ruas dengan ${n}:<br>` +
+
+        `x = ${q > 0 ? `-${q}` : Math.abs(q)} / ${n}<br>` +
+
+        `x = ${formatDesimal(x2)}<br><br>` +
+
+        `<strong>Langkah 7: Kesimpulan</strong><br>` +
+
+        `Dari hasil pemfaktoran, diperoleh:<br><br>` +
+
+        `x₁ = ${formatDesimal(x1)}<br>` +
+        `x₂ = ${formatDesimal(x2)}<br><br>` +
+
+        `<strong>Jadi, akar-akar persamaan kuadrat tersebut adalah ` +
+        `x₁ = ${formatDesimal(x1)} dan x₂ = ${formatDesimal(x2)}.</strong>`;
+
+    const elemen = document.getElementById("jawaban2");
+
+    elemen.innerHTML = hasil;
+    elemen.hidden = false;
+}
+        // ==================================
+        // TIPE 3: RUMUS ABC
+        // ==================================
+
+        function buatSoal3() {
+            let a, b, c, D;
+
+            // Menghasilkan persamaan dengan dua akar real berbeda
+            do {
+                a = acak(1, 5);
+                b = acak(-10, 10);
+                c = acak(-10, 10);
+
+                D = b * b - 4 * a * c;
+
+            } while (c === 0 || D <= 0);
+
+            data3 = { a, b, c, D };
+
+            document.getElementById("soal3").textContent =
+                formatPersamaan(a, b, c);
+
+            document.getElementById("jawaban3").hidden = true;
+        }
+
+        function jawaban3() {
+            if (!("a" in data3)) {
+                alert("Buat soal terlebih dahulu!");
+                return;
+            }
+
+            const { a, b, c, D } = data3;
+
+            const x1 = (-b + Math.sqrt(D)) / (2 * a);
+            const x2 = (-b - Math.sqrt(D)) / (2 * a);
+
+            const hasil =
+                `<strong>Pembahasan dengan Rumus ABC:</strong><br><br>` +
+
+                `<strong>1. Menentukan nilai a, b, dan c</strong><br>` +
+                `Persamaan: ${formatPersamaan(a, b, c)}<br>` +
+                `a = ${a}, b = ${b}, c = ${c}<br><br>` +
+
+                `<strong>2. Menuliskan rumus ABC</strong><br>` +
+                `x = (-b ± √(b² - 4ac)) / 2a<br><br>` +
+
+                `<strong>3. Menghitung diskriminan</strong><br>` +
+                `D = b² - 4ac<br>` +
+                `D = (${b})² - 4(${a})(${c})<br>` +
+                `D = ${b * b} - (${4 * a * c})<br>` +
+                `D = ${D}<br><br>` +
+
+                `<strong>4. Menghitung akar pertama</strong><br>` +
+                `x₁ = (-b + √D) / 2a<br>` +
+                `x₁ = (-(${b}) + √${D}) / ${2 * a}<br>` +
+                `x₁ = ${formatDesimal(x1)}<br><br>` +
+
+                `<strong>5. Menghitung akar kedua</strong><br>` +
+                `x₂ = (-b - √D) / 2a<br>` +
+                `x₂ = (-(${b}) - √${D}) / ${2 * a}<br>` +
+                `x₂ = ${formatDesimal(x2)}<br><br>` +
+
+                `<strong>Kesimpulan:</strong><br>` +
+                `Karena D = ${D} > 0, persamaan memiliki dua akar real berbeda.<br>` +
+                `Jadi, x₁ = ${formatDesimal(x1)} dan ` +
+                `x₂ = ${formatDesimal(x2)}.`;
+
+            const elemen = document.getElementById("jawaban3");
+
+            elemen.innerHTML = hasil;
+            elemen.hidden = false;
+        }
+
+
+        // ==================================
+        // MEMBUAT SOAL SAAT HALAMAN DIBUKA
+        // ==================================
+
+        buatSoal1();
+        buatSoal2();
+        buatSoal3();
+
+    </script>
+
+</body>
+</html>
